@@ -3,256 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 20px;
-        }
-        .container {
-            max-width: 650px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(118, 75, 162, 0.2);
-            border: 1px solid #e0e0e0;
-        }
-        .header {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            padding: 25px 20px;
-            text-align: center;
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 28px;
-            font-weight: 600;
-        }
-        .header p {
-            margin: 10px 0 0;
-            opacity: 0.9;
-            font-size: 16px;
-        }
-        .content {
-            padding: 25px;
-        }
-        .section {
-            background: #f8f9fa;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 25px;
-            border-right: 4px solid #764ba2;
-        }
-        .section h2 {
-            color: #764ba2;
-            margin: 0 0 15px 0;
-            font-size: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .info-row {
-            display: flex;
-            padding: 8px 0;
-            border-bottom: 1px dashed #ddd;
-        }
-        .info-row:last-child {
-            border-bottom: none;
-        }
-        .label {
-            font-weight: 700;
-            color: #555;
-            min-width: 140px;
-        }
-        .value {
-            color: #333;
-            font-weight: 500;
-        }
-        .highlight {
-            background: #e8f4fd;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-size: 14px;
-        }
-        .footer {
-            background: #f0f0f0;
-            padding: 15px;
-            text-align: center;
-            font-size: 13px;
-            color: #666;
-        }
-        .badge {
-            background: #764ba2;
-            color: white;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            display: inline-block;
-        }
+        body { font-family: Arial, sans-serif; direction: ltr; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: #764ba2; color: white; padding: 10px; text-align: center; }
+        .section { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 8px; }
+        .label { font-weight: bold; color: #764ba2; min-width: 150px; display: inline-block; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🛡️ تنبيه جديد من المتجر</h1>
-            <p>تم تسجيل زيارة جديدة لموقع أكسسوارات أنيقة</p>
+            <h2>🛡️ معلومات الزائر - متجر الإكسسوارات</h2>
         </div>
         
-        <div class="content">
-            <!-- القسم 1: معلومات أساسية -->
-            <div class="section">
-                <h2>📧 1. معلومات الزائر</h2>
-                <div class="info-row">
-                    <span class="label">البريد الإلكتروني:</span>
-                    <span class="value">{{user_email}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">وقت الزيارة:</span>
-                    <span class="value">{{time}}</span>
-                </div>
-            </div>
-            
-            <!-- القسم 2: معلومات الجهاز -->
-            <div class="section">
-                <h2>📱 2. معلومات الجهاز</h2>
-                <div class="info-row">
-                    <span class="label">المتصفح:</span>
-                    <span class="value">{{browser}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">نظام التشغيل:</span>
-                    <span class="value">{{os}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">نوع الجهاز:</span>
-                    <span class="value">{{device_type}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">الماركة:</span>
-                    <span class="value">{{device_brand}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">الموديل:</span>
-                    <span class="value">{{device_model}}</span>
-                </div>
-            </div>
-            
-            <!-- القسم 3: الشاشة والأداء -->
-            <div class="section">
-                <h2>🖥️ 3. الشاشة والأداء</h2>
-                <div class="info-row">
-                    <span class="label">دقة الشاشة:</span>
-                    <span class="value">{{screen}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">عمق الألوان:</span>
-                    <span class="value">{{color_depth}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">الذاكرة المتاحة:</span>
-                    <span class="value">{{memory}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">أنوية المعالج:</span>
-                    <span class="value">{{cpu_cores}}</span>
-                </div>
-            </div>
-            
-            <!-- القسم 4: اللغة والموقع -->
-            <div class="section">
-                <h2>🌐 4. اللغة والمنطقة</h2>
-                <div class="info-row">
-                    <span class="label">لغة النظام:</span>
-                    <span class="value">{{language}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">المنطقة الزمنية:</span>
-                    <span class="value">{{timezone}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">المنصة:</span>
-                    <span class="value">{{platform}}</span>
-                </div>
-            </div>
-            
-            <!-- القسم 5: الاتصال -->
-            <div class="section">
-                <h2>📶 5. معلومات الاتصال</h2>
-                <div class="info-row">
-                    <span class="label">نوع الاتصال:</span>
-                    <span class="value">{{connection}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">سرعة التحميل:</span>
-                    <span class="value">{{bandwidth}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">وضع توفير البيانات:</span>
-                    <span class="value">{{data_saver}}</span>
-                </div>
-            </div>
-            
-            <!-- القسم 6: البطارية -->
-            <div class="section">
-                <h2>🔋 6. البطارية</h2>
-                <div class="info-row">
-                    <span class="label">نسبة البطارية:</span>
-                    <span class="value">{{battery}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">يشحن حالياً:</span>
-                    <span class="value">{{charging}}</span>
-                </div>
-            </div>
-            
-            <!-- القسم 7: الموقع الجغرافي (الأهم) -->
-            <div class="section">
-                <h2>📍 7. الموقع الجغرافي التقريبي</h2>
-                <div class="info-row">
-                    <span class="label">عنوان IP:</span>
-                    <span class="value"><strong>{{ip}}</strong></span>
-                </div>
-                <div class="info-row">
-                    <span class="label">المدينة:</span>
-                    <span class="value">{{city}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">المنطقة:</span>
-                    <span class="value">{{region}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">الدولة:</span>
-                    <span class="value">{{country}}</span>
-                </div>
-                <div class="info-row">
-                    <span class="label">مزود الخدمة:</span>
-                    <span class="value">{{isp}}</span>
-                </div>
-            </div>
-            
-            <!-- القسم 8: معلومات خام -->
-            <div class="section">
-                <h2>🔧 8. تفاصيل إضافية</h2>
-                <div class="highlight">
-                    <div class="info-row">
-                        <span class="label">UserAgent الخام:</span>
-                        <span class="value">{{raw_ua}}</span>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ملخص سريع -->
-            <div style="background: #764ba2; color: white; padding: 15px; border-radius: 10px; margin: 20px 0; text-align: center;">
-                <strong>📊 ملخص سريع:</strong> {{device_type}} - {{device_brand}} {{device_model}} - {{os}} - {{country}}
-            </div>
+        <div class="section">
+            <h3>📧 معلومات أساسية</h3>
+            <p><span class="label">البريد الإلكتروني:</span> {{user_email}}</p>
+            <p><span class="label">الوقت:</span> {{time}}</p>
         </div>
         
-        <div class="footer">
-            <p>© 2026 متجر أكسسوارات أنيقة - جميع الحقوق محفوظة</p>
-            <p style="margin-top: 5px; font-size: 11px;">تم الإرسال عبر EmailJS • نظام تتبع الزوار</p>
+        <div class="section">
+            <h3>📱 معلومات الجهاز</h3>
+            <p><span class="label">المتصفح:</span> {{browser}}</p>
+            <p><span class="label">نظام التشغيل:</span> {{os}}</p>
+            <p><span class="label">نوع الجهاز:</span> {{device_type}}</p>
+            <p><span class="label">الماركة:</span> {{device_brand}}</p>
+            <p><span class="label">الموديل:</span> {{device_model}}</p>
         </div>
+        
+        <div class="section">
+            <h3>🖥️ الشاشة والأداء</h3>
+            <p><span class="label">دقة الشاشة:</span> {{screen}}</p>
+            <p><span class="label">عمق الألوان:</span> {{color_depth}}</p>
+            <p><span class="label">الذاكرة:</span> {{memory}}</p>
+            <p><span class="label">أنوية المعالج:</span> {{cpu_cores}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>🌐 اللغة والموقع</h3>
+            <p><span class="label">اللغة:</span> {{language}}</p>
+            <p><span class="label">المنطقة الزمنية:</span> {{timezone}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>📶 الاتصال</h3>
+            <p><span class="label">نوع الاتصال:</span> {{connection}}</p>
+            <p><span class="label">سرعة التحميل:</span> {{bandwidth}}</p>
+            <p><span class="label">وضع توفير البيانات:</span> {{data_saver}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>🔋 البطارية</h3>
+            <p><span class="label">المستوى:</span> {{battery}}</p>
+            <p><span class="label">يشحن حالياً:</span> {{charging}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>📍 الموقع الجغرافي التقريبي</h3>
+            <p><span class="label">IP:</span> {{ip}}</p>
+            <p><span class="label">المدينة:</span> {{city}}</p>
+            <p><span class="label">المنطقة:</span> {{region}}</p>
+            <p><span class="label">الدولة:</span> {{country}}</p>
+            <p><span class="label">مزود الخدمة:</span> {{isp}}</p>
+        </div>
+        
+        <div class="section">
+            <h3>🔧 تفاصيل إضافية</h3>
+            <p><span class="label">المنصة:</span> {{platform}}</p>
+            <p><span class="label">UserAgent الخام:</span> {{raw_ua}}</p>
+        </div>
+        
+        <p style="text-align: center; margin-top: 30px; color: #888; font-size: 12px;">
+            تم الإرسال عبر متجر الإكسسوارات - جميع الحقوق محفوظة
+        </p>
     </div>
 </body>
 </html>
