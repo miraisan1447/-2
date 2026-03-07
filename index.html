@@ -9,6 +9,7 @@
     <!-- Font Awesome للأيقونات -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* نفس التنسيقات */
         * {
             margin: 0;
             padding: 0;
@@ -441,8 +442,29 @@
                 if (androidMatch) {
                     osVersion = androidMatch[1];
                     osFullName = "Android " + osVersion;
+                    
+                    // إضافة الاسم التجاري للإصدار
+                    const androidVersions = {
+                        "14": "Upside Down Cake",
+                        "13": "Tiramisu",
+                        "12": "Snow Cone",
+                        "11": "Red Velvet Cake",
+                        "10": "Queen Cake",
+                        "9": "Pie"
+                    };
+                    const mainVersion = osVersion.split('.')[0];
+                    if (androidVersions[mainVersion]) {
+                        osFullName += " (" + androidVersions[mainVersion] + ")";
+                    }
                 } else {
-                    osFullName = "Android (إصدار غير معروف)";
+                    // محاولة استخراج الإصدار من أي مكان
+                    const fallbackMatch = ua.match(/Android[^0-9]*(\d+)/);
+                    if (fallbackMatch) {
+                        osVersion = fallbackMatch[1];
+                        osFullName = "Android " + osVersion + " (تقديري)";
+                    } else {
+                        osFullName = "Android (إصدار غير معروف)";
+                    }
                 }
                 deviceType = "Mobile";
             } else if (ua.includes("iPhone") || ua.includes("iPad")) {
@@ -462,114 +484,76 @@
             if (ua.includes("Android") || ua.includes("iPhone") || ua.includes("iPad") || ua.includes("Mobile")) {
                 deviceType = "Mobile";
                 
-                // Samsung
-                if (ua.includes("SM-") || ua.includes("Samsung")) {
-                    deviceBrand = "Samsung";
-                    const match = ua.match(/SM-[A-Z0-9]+/);
-                    if (match) {
-                        deviceModel = match[0];
-                        deviceMarketingName = "Samsung " + deviceModel;
+                // محاولة استخراج الموديل من السطر الكامل
+                const modelMatch = ua.match(/Android[^;]+;\s*([^;)]+)/);
+                if (modelMatch && modelMatch[1]) {
+                    const modelString = modelMatch[1].trim();
+                    
+                    // تحليل الموديل
+                    if (modelString.includes("SM-")) {
+                        deviceBrand = "Samsung";
+                        deviceModel = modelString;
+                        deviceMarketingName = "Samsung " + modelString;
+                    } else if (modelString.includes("Redmi") || modelString.includes("Xiaomi")) {
+                        deviceBrand = "Xiaomi";
+                        deviceModel = modelString;
+                        deviceMarketingName = "Xiaomi " + modelString;
+                    } else if (modelString.includes("HUAWEI")) {
+                        deviceBrand = "Huawei";
+                        deviceModel = modelString;
+                        deviceMarketingName = "Huawei " + modelString;
+                    } else if (modelString.includes("Realme")) {
+                        deviceBrand = "Realme";
+                        deviceModel = modelString;
+                        deviceMarketingName = "Realme " + modelString;
+                    } else if (modelString.includes("OPPO")) {
+                        deviceBrand = "OPPO";
+                        deviceModel = modelString;
+                        deviceMarketingName = "OPPO " + modelString;
+                    } else if (modelString.includes("Vivo")) {
+                        deviceBrand = "Vivo";
+                        deviceModel = modelString;
+                        deviceMarketingName = "Vivo " + modelString;
+                    } else if (modelString.includes("Pixel")) {
+                        deviceBrand = "Google";
+                        deviceModel = modelString;
+                        deviceMarketingName = "Google " + modelString;
                     } else {
-                        deviceMarketingName = "Samsung";
+                        // إذا كان الموديل حرف واحد مثل "K" أو "F" فهذا يعني أن المتصفح أخفى المعلومات
+                        if (modelString.length <= 2) {
+                            deviceBrand = "جهاز أندرويد";
+                            deviceModel = "غير معروف (متصفح مخفي)";
+                            deviceMarketingName = "جهاز أندرويد (معلومات مخفية)";
+                        } else {
+                            deviceBrand = "Android Device";
+                            deviceModel = modelString;
+                            deviceMarketingName = "جهاز " + modelString;
+                        }
                     }
+                } else {
+                    deviceBrand = "Android Device";
+                    deviceModel = "غير معروف";
+                    deviceMarketingName = "جهاز أندرويد غير معروف";
                 }
-                // Xiaomi / Redmi
-                else if (ua.includes("Redmi") || ua.includes("Xiaomi") || ua.includes("Mi ")) {
-                    deviceBrand = "Xiaomi";
-                    const match = ua.match(/(Redmi|Xiaomi|Mi)[^;\s)]+/);
-                    if (match) {
-                        deviceModel = match[0];
-                        deviceMarketingName = "Xiaomi " + deviceModel;
-                    } else {
-                        deviceMarketingName = "Xiaomi";
-                    }
-                }
-                // Huawei
-                else if (ua.includes("HUAWEI") || ua.includes("Honor")) {
-                    deviceBrand = "Huawei";
-                    const match = ua.match(/(HUAWEI|Honor)[^;\s)]+/);
-                    if (match) {
-                        deviceModel = match[0];
-                        deviceMarketingName = "Huawei " + deviceModel;
-                    } else {
-                        deviceMarketingName = "Huawei";
-                    }
-                }
-                // Realme
-                else if (ua.includes("Realme")) {
-                    deviceBrand = "Realme";
-                    const match = ua.match(/Realme[^;\s)]+/);
-                    if (match) {
-                        deviceModel = match[0];
-                        deviceMarketingName = "Realme " + deviceModel;
-                    } else {
-                        deviceMarketingName = "Realme";
-                    }
-                }
-                // OPPO
-                else if (ua.includes("OPPO")) {
-                    deviceBrand = "OPPO";
-                    const match = ua.match(/OPPO[^;\s)]+/);
-                    if (match) {
-                        deviceModel = match[0];
-                        deviceMarketingName = "OPPO " + deviceModel;
-                    } else {
-                        deviceMarketingName = "OPPO";
-                    }
-                }
-                // Vivo
-                else if (ua.includes("Vivo")) {
-                    deviceBrand = "Vivo";
-                    const match = ua.match(/Vivo[^;\s)]+/);
-                    if (match) {
-                        deviceModel = match[0];
-                        deviceMarketingName = "Vivo " + deviceModel;
-                    } else {
-                        deviceMarketingName = "Vivo";
-                    }
-                }
-                // Pixel
-                else if (ua.includes("Pixel")) {
-                    deviceBrand = "Google";
-                    const match = ua.match(/Pixel[^;\s)]+/);
-                    if (match) {
-                        deviceModel = match[0];
-                        deviceMarketingName = "Google " + deviceModel;
-                    } else {
-                        deviceMarketingName = "Google Pixel";
-                    }
-                }
+                
                 // iPhone
-                else if (ua.includes("iPhone")) {
+                if (ua.includes("iPhone")) {
                     deviceBrand = "Apple";
                     const match = ua.match(/iPhone[^,\s)]*/);
                     if (match) {
                         deviceModel = match[0];
-                        // تحويل كود iPhone لاسم تسويقي
-                        if (deviceModel.includes("iPhone16,2")) deviceMarketingName = "iPhone 15 Pro Max";
-                        else if (deviceModel.includes("iPhone15,3")) deviceMarketingName = "iPhone 14 Pro Max";
-                        else if (deviceModel.includes("iPhone14,2")) deviceMarketingName = "iPhone 13 Pro";
-                        else deviceMarketingName = "iPhone";
-                    } else {
-                        deviceMarketingName = "iPhone";
+                        const iPhoneModels = {
+                            "iPhone16,2": "iPhone 15 Pro Max",
+                            "iPhone15,3": "iPhone 14 Pro Max",
+                            "iPhone14,2": "iPhone 13 Pro"
+                        };
+                        deviceMarketingName = iPhoneModels[deviceModel] || "iPhone";
                     }
                 }
                 // iPad
                 else if (ua.includes("iPad")) {
                     deviceBrand = "Apple";
                     deviceMarketingName = "iPad";
-                }
-                // إذا ما تعرفناه، نحاول نستخرج أي معلومات من UserAgent
-                else {
-                    deviceBrand = "Android Device";
-                    // محاولة استخراج الموديل من أي مكان في UserAgent
-                    const modelMatch = ua.match(/Android[^;]+;\s*([^;)]+)/);
-                    if (modelMatch && modelMatch[1]) {
-                        deviceModel = modelMatch[1].trim();
-                        deviceMarketingName = "جهاز " + deviceModel;
-                    } else {
-                        deviceMarketingName = "جهاز أندرويد غير معروف";
-                    }
                 }
             } else {
                 deviceType = "Desktop";
