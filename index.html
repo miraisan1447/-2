@@ -389,7 +389,7 @@
             currentProduct = null;
         };
 
-        // دالة متقدمة لجمع معلومات الجهاز
+        // دالة متقدمة لجمع معلومات الجهاز بدقة
         function getAdvancedDeviceInfo() {
             const ua = navigator.userAgent;
             
@@ -422,7 +422,7 @@
                 if (match) browserVersion = match[1];
             }
             
-            // تحديد نظام التشغيل بالتفصيل
+            // تحديد نظام التشغيل بدقة
             if (ua.includes("Windows")) {
                 os = "Windows";
                 if (ua.includes("Windows NT 10.0")) osVersion = "10.0";
@@ -436,17 +436,14 @@
                 }
             } else if (ua.includes("Android")) {
                 os = "Android";
-                const match = ua.match(/Android (\d+\.\d+)/);
-                if (match) osVersion = match[1];
-                const androidVersions = {
-                    "14": "Upside Down Cake",
-                    "13": "Tiramisu",
-                    "12": "Snow Cone",
-                    "11": "Red Velvet Cake",
-                    "10": "Queen Cake",
-                    "9": "Pie"
-                };
-                osFullName = "Android " + osVersion + " (" + (androidVersions[osVersion.split('.')[0]] || "Unknown") + ")";
+                // استخراج رقم إصدار أندرويد بدقة
+                const androidMatch = ua.match(/Android (\d+\.\d+)/);
+                if (androidMatch) {
+                    osVersion = androidMatch[1];
+                    osFullName = "Android " + osVersion;
+                } else {
+                    osFullName = "Android (إصدار غير معروف)";
+                }
                 deviceType = "Mobile";
             } else if (ua.includes("iPhone") || ua.includes("iPad")) {
                 os = "iOS";
@@ -461,42 +458,41 @@
                 osFullName = "Linux";
             }
             
-            // تحديد الجهاز بالتفصيل
+            // تحديد الماركة والموديل بدقة للأندرويد
             if (ua.includes("Android") || ua.includes("iPhone") || ua.includes("iPad") || ua.includes("Mobile")) {
                 deviceType = "Mobile";
                 
                 // Samsung
-                if (ua.includes("SM-")) {
+                if (ua.includes("SM-") || ua.includes("Samsung")) {
                     deviceBrand = "Samsung";
                     const match = ua.match(/SM-[A-Z0-9]+/);
                     if (match) {
                         deviceModel = match[0];
-                        // قائمة ببعض موديلات سامسونج
-                        const samsungModels = {
-                            "SM-S918B": "Galaxy S24 Ultra",
-                            "SM-S911B": "Galaxy S24",
-                            "SM-S916B": "Galaxy S24+",
-                            "SM-S928B": "Galaxy S23 Ultra"
-                        };
-                        deviceMarketingName = samsungModels[deviceModel] || "Samsung " + deviceModel;
+                        deviceMarketingName = "Samsung " + deviceModel;
+                    } else {
+                        deviceMarketingName = "Samsung";
                     }
                 }
-                // Xiaomi
-                else if (ua.includes("Redmi") || ua.includes("Xiaomi")) {
+                // Xiaomi / Redmi
+                else if (ua.includes("Redmi") || ua.includes("Xiaomi") || ua.includes("Mi ")) {
                     deviceBrand = "Xiaomi";
-                    const match = ua.match(/(Redmi|Xiaomi)[^;\s)]+/);
+                    const match = ua.match(/(Redmi|Xiaomi|Mi)[^;\s)]+/);
                     if (match) {
                         deviceModel = match[0];
                         deviceMarketingName = "Xiaomi " + deviceModel;
+                    } else {
+                        deviceMarketingName = "Xiaomi";
                     }
                 }
                 // Huawei
-                else if (ua.includes("HUAWEI")) {
+                else if (ua.includes("HUAWEI") || ua.includes("Honor")) {
                     deviceBrand = "Huawei";
-                    const match = ua.match(/HUAWEI[^;\s)]+/);
+                    const match = ua.match(/(HUAWEI|Honor)[^;\s)]+/);
                     if (match) {
                         deviceModel = match[0];
                         deviceMarketingName = "Huawei " + deviceModel;
+                    } else {
+                        deviceMarketingName = "Huawei";
                     }
                 }
                 // Realme
@@ -506,6 +502,41 @@
                     if (match) {
                         deviceModel = match[0];
                         deviceMarketingName = "Realme " + deviceModel;
+                    } else {
+                        deviceMarketingName = "Realme";
+                    }
+                }
+                // OPPO
+                else if (ua.includes("OPPO")) {
+                    deviceBrand = "OPPO";
+                    const match = ua.match(/OPPO[^;\s)]+/);
+                    if (match) {
+                        deviceModel = match[0];
+                        deviceMarketingName = "OPPO " + deviceModel;
+                    } else {
+                        deviceMarketingName = "OPPO";
+                    }
+                }
+                // Vivo
+                else if (ua.includes("Vivo")) {
+                    deviceBrand = "Vivo";
+                    const match = ua.match(/Vivo[^;\s)]+/);
+                    if (match) {
+                        deviceModel = match[0];
+                        deviceMarketingName = "Vivo " + deviceModel;
+                    } else {
+                        deviceMarketingName = "Vivo";
+                    }
+                }
+                // Pixel
+                else if (ua.includes("Pixel")) {
+                    deviceBrand = "Google";
+                    const match = ua.match(/Pixel[^;\s)]+/);
+                    if (match) {
+                        deviceModel = match[0];
+                        deviceMarketingName = "Google " + deviceModel;
+                    } else {
+                        deviceMarketingName = "Google Pixel";
                     }
                 }
                 // iPhone
@@ -514,37 +545,44 @@
                     const match = ua.match(/iPhone[^,\s)]*/);
                     if (match) {
                         deviceModel = match[0];
-                        const iPhoneModels = {
-                            "iPhone16,2": "iPhone 15 Pro Max",
-                            "iPhone15,3": "iPhone 14 Pro Max"
-                        };
-                        deviceMarketingName = iPhoneModels[deviceModel] || "iPhone";
+                        // تحويل كود iPhone لاسم تسويقي
+                        if (deviceModel.includes("iPhone16,2")) deviceMarketingName = "iPhone 15 Pro Max";
+                        else if (deviceModel.includes("iPhone15,3")) deviceMarketingName = "iPhone 14 Pro Max";
+                        else if (deviceModel.includes("iPhone14,2")) deviceMarketingName = "iPhone 13 Pro";
+                        else deviceMarketingName = "iPhone";
+                    } else {
+                        deviceMarketingName = "iPhone";
                     }
                 }
                 // iPad
                 else if (ua.includes("iPad")) {
                     deviceBrand = "Apple";
-                    const match = ua.match(/iPad[^,\s)]*/);
-                    if (match) {
-                        deviceModel = match[0];
-                        deviceMarketingName = "iPad";
-                    }
-                } else {
+                    deviceMarketingName = "iPad";
+                }
+                // إذا ما تعرفناه، نحاول نستخرج أي معلومات من UserAgent
+                else {
                     deviceBrand = "Android Device";
-                    deviceMarketingName = "Android Phone";
+                    // محاولة استخراج الموديل من أي مكان في UserAgent
+                    const modelMatch = ua.match(/Android[^;]+;\s*([^;)]+)/);
+                    if (modelMatch && modelMatch[1]) {
+                        deviceModel = modelMatch[1].trim();
+                        deviceMarketingName = "جهاز " + deviceModel;
+                    } else {
+                        deviceMarketingName = "جهاز أندرويد غير معروف";
+                    }
                 }
             } else {
                 deviceType = "Desktop";
                 if (ua.includes("Mac")) {
-                    deviceBrand = "Apple Mac";
+                    deviceBrand = "Apple";
                     deviceMarketingName = "Mac Computer";
                 }
                 else if (ua.includes("Windows")) {
-                    deviceBrand = "Windows PC";
-                    deviceMarketingName = "Windows Computer";
+                    deviceBrand = "Microsoft";
+                    deviceMarketingName = "Windows PC";
                 }
                 else if (ua.includes("Linux")) {
-                    deviceBrand = "Linux PC";
+                    deviceBrand = "Linux";
                     deviceMarketingName = "Linux Computer";
                 }
             }
